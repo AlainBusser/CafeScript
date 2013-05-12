@@ -1,0 +1,148 @@
+<!doctype html>
+ 
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>intervalles</title>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/coffee-script/1.4.0/coffee-script.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js"></script>
+  <script src="https://raw.github.com/furf/jquery-ui-touch-punch/master/jquery.ui.touch-punch.min.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css"/>
+   <style>
+  	#interv1 .ui-slider-range.ui-widget-header {background: lightblue; }  
+		#interv2 .ui-slider-range.ui-widget-header {background: lightgreen; }  
+		#interv3 .ui-slider-range.ui-widget-header {background: darkred; } 
+	</style>
+ 
+  
+</head>
+
+
+<body>
+<script type="text/coffeescript">
+intersection = (I,J) ->
+        [Math.max(I[0],J[0]), Math.min I[1],J[1] ]
+$ ->
+        
+    a=-20
+    b=50
+    c=20
+    d=80
+    I=[a,b]
+    J=[c,d]
+    K=[c,b]
+	$( ".curseur" ).width 400
+	$( ".curseur" ).height 10
+	####################Tout ce qui se passe quand on actionne le curseur pour I
+	$( "#interv1" ).slider
+		orientation: "horizontal"
+		range: true
+		min: -200
+		max: 200
+		values: [-20,50]
+		slide: (event,ui) ->
+			I=ui.values
+			$( "#affiche1" ).text I
+			J=$( "#affiche2" ).text().split ","
+			K=intersection I,J
+			if K[0]>K[1]
+				K=""
+				$("#vide").html "I &cap; J = &empty; : On dit que I et J sont disjoints"
+			else
+				$("#vide").html ""
+			$( "#afficheI" ).text K
+			$( "#interv3" ).slider "values",K
+			if J[0]<=I[0] and I[1]<=J[1]
+			    $( "#IdansJ").html "Tiens, I&cap;J=I: On dit que I est inclus dans J et on note I&subset;J"
+			else
+				$( "#IdansJ").html ""
+			if J[0]>=I[0] and I[1]>=J[1]
+			    $( "#JdansI").html "Tiens, I&cap;J=J: On dit que J est inclus dans I et on note J&subset;I"
+			else
+				$( "#JdansI").html ""
+			if J[0]<=I[0] and I[1]<=J[1] and  J[0]>=I[0] and I[1]>=J[1]
+				$( "#IegalJ").html "Tiens, I&subset;J et J&subset;I: On a donc I=J"
+			else
+				$("#IegalJ").html ""
+			if I[1]>=J[0] and J[1]>=I[0]
+				a=Math.min I[0], J[0]
+				b=Math.max I[1], J[1]
+				$("#unionJack").html "I&cup;J est l'intervalle [#{a};#{b}]"
+			else
+				$("#unionJack").html "On constate que la rÃ©union de deux intervalles n'est pas forcÃ©ment un intervalle; par contre l'intersection de deux intervalles est toujours un intervalle, Ã©ventuellement vide..."
+	####################Tout ce qui se passe quand on actionne le curseur pour J
+	$( "#interv2" ).slider
+		orientation: "horizontal"
+		range: true
+		min: -200
+		max: 200
+		values: [20,80]
+		slide: (event,ui) ->
+			J=ui.values
+			$( "#affiche2" ).text J
+			I=$( "#affiche1" ).text().split ","
+			K=intersection I,J
+			if K[0]>K[1]
+				K=""
+				$("#vide").html "I &cap; J = &empty; : On dit que I et J sont disjoints"
+			else
+				$("#vide").html ""
+			$( "#afficheI" ).text K
+			$( "#interv3" ).slider "values",K
+			if J[0]<=I[0] and I[1]<=J[1]
+			    $( "#IdansJ").html "Tiens, I&cap;J=I: On dit que I est inclus dans J et on note I&subset;J"
+			else
+				$( "#IdansJ").html ""
+			if J[0]>=I[0] and I[1]>=J[1]
+			    $( "#JdansI").html "Tiens, I&cap;J=J: On dit que J est inclus dans I et on note J&subset;I"
+			else
+				$( "#JdansI").html ""
+			if J[0]<=I[0] and I[1]<=J[1] and  J[0]>=I[0] and I[1]>=J[1]
+				$( "#IegalJ").html "Tiens, I&subset;J et J&subset;I: On a donc I=J"
+			else
+				$("#IegalJ").html ""
+			if I[1]>=J[0] and J[1]>=I[0]
+				a=Math.min I[0], J[0]
+				b=Math.max I[1], J[1]
+				$("#unionJack").html "I&cup;J est l'intervalle [#{a};#{b}]"
+			else
+				$("#unionJack").html "On constate que la rÃ©union de deux intervalles n'est pas forcÃ©ment un intervalle; par contre l'intersection de deux intervalles est toujours un intervalle, Ã©ventuellement vide..."
+	####################gestion du curseur rouge qui ne doit pas Ãªtre actionnÃ©
+	$( "#interv3" ).slider
+		orientation: "horizontal"
+		range: true
+		min: -200
+		max: 200
+		values: [20,80]
+		slide: (event,ui) ->
+			K=ui.values
+	$( "#interv3" ).slider "disable"
+		    
+	$( "#plusloin" ).accordion collapsible: true
+</script>
+<h2>Intervalles de rÃ©els</h2>
+<div id="interv1" class="curseur"></div>
+I=[<span id="affiche1">-20,50</span>] 
+et J=[<span id="affiche2">20,80</span>]
+<div id="interv2" class="curseur"></div>
+<div id="plusloin">
+<h3>Intersection</h3>
+<div>I &cap; J = [<span id="afficheI">20,50</span>] (en rouge, tout ce qui est 
+Ã  la fois bleu et vert)
+	<div id="interv3" class="curseur"></div>
+	<p id="vide"></p>
+</div>
+	<h3><a>RÃ©union</a></h3>
+	<div><p id="unionJack"></p></div>
+	<h3><a>Inclusion</a></h3>
+	<div><ul>
+		<li id="IdansJ"></li>
+		<li id="JdansI"></li>
+		<li id="IegalJ"></li>
+	</ul></div>
+</div>
+</body>
+</html>
